@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatServer {
     private static final int PORT = 8888;
     private static final int INITIAL_CLIENTS = 10;
     private final ServerSocket server;
-    private final List<Client> clientsConnected;
+    private final Map<String, Client> clientsConnected;
 
     public ChatServer() throws IOException {
         this(PORT, INITIAL_CLIENTS);
@@ -24,7 +25,7 @@ public class ChatServer {
 
     public ChatServer(final int port, final int initClients) throws IOException {
         this.server = new ServerSocket(port);
-        this.clientsConnected = new ArrayList<>(initClients);
+        this.clientsConnected = new ConcurrentHashMap<>(initClients);
     }
 
     public void start() throws IOException {
@@ -38,7 +39,7 @@ public class ChatServer {
     private Client acceptClient() throws IOException {
         Socket newClient = this.server.accept();
         Client client = Client.of(newClient);
-        this.clientsConnected.add(client);
+        this.clientsConnected.put(client.getId(), client);
         System.out.printf(">Client [%s] connected!%n", client.getId());
         return client;
     }
@@ -47,19 +48,13 @@ public class ChatServer {
         this.server.close();
     }
 
-    public List<Client> getClientsConnected() {
+    public Map<String, Client> getClientsConnected() {
         return this.clientsConnected;
     }
 
     public void closeClient(String id) throws IOException {
-        Iterator<Client> clientIterator = this.clientsConnected.iterator();
-        while (clientIterator.hasNext()) {
-            Client client = clientIterator.next();
-            if(client.getId() == id) {
-                client.close();
-                clientIterator.remove();
-            }
-        }
+        this.clientsConnected.get(id).close();
+        this.clientsConnected.remove(id);
     }
 
     public static void main(String[] args) throws IOException {
