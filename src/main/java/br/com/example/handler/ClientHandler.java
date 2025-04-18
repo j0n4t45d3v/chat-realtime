@@ -27,7 +27,7 @@ public class ClientHandler implements Runnable {
                 receiveMessage = this.client.receiveMessage();
                 if (receiveMessage.equals("/quit")) {
                     this.server.closeClient(id);
-                    receiveMessage = String.format("Saiu do chat!");
+                    receiveMessage = "Saiu do chat!";
                     this.replyMessageToClientsConnected(receiveMessage);
                     break;
                 }
