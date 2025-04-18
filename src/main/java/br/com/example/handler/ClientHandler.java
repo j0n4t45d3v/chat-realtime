@@ -39,7 +39,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void replyMessageToClientsConnected(String message) {
-        message = String.format("%s > %s", this.client.getId(), message);
+        message = String.format("[%s]> %s", this.client.getId(), message);
         System.out.println(message);
         for (Client clientConsumerMessage : this.server.getClientsConnected().values()) {
             if (!clientConsumerMessage.getId().equals(this.client.getId())) {
