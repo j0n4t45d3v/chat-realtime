@@ -29,7 +29,7 @@ public class ChatServer {
     }
 
     public void start() throws IOException {
-        System.out.println("Server started ...");
+        System.out.printf("Server started on port: %d%n", this.server.getLocalPort());
         while (!this.server.isClosed()) {
             Client client = this.acceptClient();
             new ClientHandler(client, this).process();
