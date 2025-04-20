@@ -10,13 +10,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatServer {
-    private static final int PORT = 8888;
+    private static final int DEFAULT_PORT = 8888;
     private static final int INITIAL_CLIENTS = 10;
     private final ServerSocket server;
     private final Map<String, Client> clientsConnected;
 
     public ChatServer() throws IOException {
-        this(PORT, INITIAL_CLIENTS);
+        this(DEFAULT_PORT, INITIAL_CLIENTS);
     }
 
     public ChatServer(final int port) throws IOException {
