@@ -58,7 +58,19 @@ public class ChatServer {
     }
 
     public static void main(String[] args) throws IOException {
-        ChatServer server = new ChatServer();
+        int port = DEFAULT_PORT;
+        if (args.length >= 2) {
+            if(args[0] != null && args[1] != null && args[0].equals("--port")) {
+                try{
+                    port = Integer.parseInt(args[1]);
+                }catch (NumberFormatException error) {
+                    System.out.println("Usage: chat-realtime [--port <integer>]");
+                    System.exit(1);
+                }
+            }
+        }
+
+        ChatServer server = new ChatServer(port);
         server.start();
     }
 }
