@@ -1,5 +1,6 @@
 package br.com.example;
 
+import br.com.example.config.ServerConfig;
 import br.com.example.handler.ClientHandler;
 import br.com.example.model.Client;
 
@@ -10,17 +11,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatServer {
-    private static final int DEFAULT_PORT = 8888;
-    private static final int INITIAL_CLIENTS = 10;
     private final ServerSocket server;
     private final Map<String, Client> clientsConnected;
 
     public ChatServer() throws IOException {
-        this(DEFAULT_PORT, INITIAL_CLIENTS);
-    }
-
-    public ChatServer(final int port) throws IOException {
-        this(port, INITIAL_CLIENTS);
+        this(ServerConfig.INSTANCE.getPort(), ServerConfig.INSTANCE.getMaxClient());
     }
 
     public ChatServer(final int port, final int initClients) throws IOException {
@@ -58,19 +53,7 @@ public class ChatServer {
     }
 
     public static void main(String[] args) throws IOException {
-        int port = DEFAULT_PORT;
-        if (args.length >= 2) {
-            if(args[0] != null && args[1] != null && args[0].equals("--port")) {
-                try{
-                    port = Integer.parseInt(args[1]);
-                }catch (NumberFormatException error) {
-                    System.out.println("Usage: chat-realtime [--port <integer>]");
-                    System.exit(1);
-                }
-            }
-        }
-
-        ChatServer server = new ChatServer(port);
+        ChatServer server = new ChatServer();
         server.start();
     }
 }
