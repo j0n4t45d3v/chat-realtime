@@ -3,6 +3,8 @@ package br.com.example;
 import br.com.example.config.ServerConfig;
 import br.com.example.handler.ClientHandler;
 import br.com.example.model.Client;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,6 +13,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatServer {
+
+    private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
+
     private final ServerSocket server;
     private final Map<String, Client> clientsConnected;
 
@@ -24,7 +29,7 @@ public class ChatServer {
     }
 
     public void start() throws IOException {
-        System.out.printf("Server started on port: %d%n", this.server.getLocalPort());
+        log.info("Server started on port: {}", this.server.getLocalPort());
         while (!this.server.isClosed()) {
             Client client = this.acceptClient();
             new ClientHandler(client, this).process();
@@ -35,7 +40,7 @@ public class ChatServer {
         Socket newClient = this.server.accept();
         Client client = Client.of(newClient);
         this.clientsConnected.put(client.getId(), client);
-        System.out.printf(">Client [%s] connected!%n", client.getId());
+        log.info("Client {} connected!", client.getId());
         return client;
     }
 
