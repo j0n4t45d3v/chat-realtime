@@ -58,7 +58,14 @@ public class ChatServer {
     }
 
     public static void main(String[] args) throws IOException {
-        ChatServer server = new ChatServer();
-        server.start();
+        ChatServer server = null;
+        try {
+            server = new ChatServer();
+            server.start();
+        } finally {
+            if (server != null) {
+                server.stop();
+            }
+        }
     }
 }
