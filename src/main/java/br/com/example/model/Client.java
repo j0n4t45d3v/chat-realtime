@@ -20,6 +20,13 @@ public class Client {
         this.input = new Scanner(socket.getInputStream());
     }
 
+    public Client(String id, Socket socket, PrintWriter output, Scanner input) {
+        this.id = id;
+        this.socket = socket;
+        this.output = output;
+        this.input = input;
+    }
+
     public static Client of(Socket socket) throws IOException {
         String uuid = UUID.randomUUID().toString();
         return new Client(uuid, socket);
