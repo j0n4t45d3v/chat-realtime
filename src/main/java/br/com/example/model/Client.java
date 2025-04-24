@@ -36,11 +36,11 @@ public class Client {
         return this.input.hasNextLine() && this.socket.isConnected();
     }
 
-    public String receiveMessage() {
+    public String getMessage() {
         return this.input.nextLine();
     }
 
-    public void write(String message) {
+    public void print(String message) {
         this.output.println(message);
         this.output.flush();
     }

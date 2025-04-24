@@ -122,14 +122,14 @@ class ClientTest {
         String expectedReceiveMessage = "Test receive message";
         when(this.input.nextLine()).thenReturn(expectedReceiveMessage);
 
-        String receiveMessage = newClient.receiveMessage();
+        String receiveMessage = newClient.getMessage();
         assertEquals(expectedReceiveMessage, receiveMessage);
 
         verify(this.input, times(1)).nextLine();
     }
 
     @Test
-    @DisplayName("should write server response in the client output")
+    @DisplayName("should print server response in the client output")
     void write_ShouldWriteServeResponseInTheClientOutput() {
         Client newClient = new Client(
                 UUID.randomUUID().toString(),
@@ -139,7 +139,7 @@ class ClientTest {
         );
         String message = "Test receive message";
 
-        newClient.write(message);
+        newClient.print(message);
 
         verify(this.output, times(1)).println(message);
         verify(this.output, times(1)).flush();
