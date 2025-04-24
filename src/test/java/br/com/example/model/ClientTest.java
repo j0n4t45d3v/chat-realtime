@@ -69,6 +69,48 @@ class ClientTest {
     }
 
     @Test
+    @DisplayName("should return false when client is not connected")
+    void up_ShouldReturnTrueWhenClientIsNotConnected() {
+        Client newClient = new Client(
+                UUID.randomUUID().toString(),
+                this.connectionMock,
+                this.output,
+                this.input
+        );
+        when(this.input.hasNextLine())
+                .thenReturn(true);
+        when(this.connectionMock.isConnected())
+                .thenReturn(false);
+
+        boolean clientIsConnectedWithServer = newClient.up();
+        assertFalse(clientIsConnectedWithServer);
+
+        verify(this.input).hasNextLine();
+        verify(this.connectionMock).isConnected();
+    }
+
+    @Test
+    @DisplayName("should return false when client is connected and input buffer is empty")
+    void up_ShouldReturnTrueWhenClientIsConnectedAndInputBufferIsEmpty() {
+        Client newClient = new Client(
+                UUID.randomUUID().toString(),
+                this.connectionMock,
+                this.output,
+                this.input
+        );
+        when(this.input.hasNextLine())
+                .thenReturn(false);
+        when(this.connectionMock.isConnected())
+                .thenReturn(false);
+
+        boolean clientIsConnectedWithServer = newClient.up();
+        assertFalse(clientIsConnectedWithServer);
+
+        verify(this.input, times(1)).hasNextLine();
+        verify(this.connectionMock, times(0)).isConnected();
+    }
+
+    @Test
     @DisplayName("should receive input from the client and return string")
     void receiveMessage_ShouldReceiveInputFromTheClientAndReturnString() {
         Client newClient = new Client(
