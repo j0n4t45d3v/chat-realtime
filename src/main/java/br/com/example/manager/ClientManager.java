@@ -19,10 +19,14 @@ public class ClientManager {
     }
 
     public void disconnect(String id) {
-        Optional<Client> client = Optional.ofNullable(this.clientsConnected.get(id));
-        if (client.isPresent()) {
+        if (this.alreadyExistClientConnectedWithName(id)) {
             this.clientsConnected.remove(id);
         }
+    }
+
+    public boolean alreadyExistClientConnectedWithName(String id) {
+        Optional<Client> client = Optional.ofNullable(this.clientsConnected.get(id));
+        return client.isPresent();
     }
 
     public List<Client> getClients() {
