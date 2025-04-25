@@ -20,15 +20,13 @@ Tudo isso acessado via **linha de comando (CLI)**.
 
 ## 🧰 Tecnologias utilizadas
 
-- Java 21+
-- Java Sockets (`java.net.ServerSocket`, `Socket`)
-- Threads para controle simultâneo de clientes
-- Coleções sincronizadas para gerenciamento de estado
-- CLI para interação em tempo real
 - **Java 21+** - linguagem
 - **Java Sockets** (`java.net.ServerSocket`, `Socket`)
 - **Threads** - controle simultâneo de clientes
 - **ConcurrentMap** - Coleções sincronizadas
+- **Mockito** - mocks de objetos
+- **Junit5** - testes unitários
+- **SLF4J e Logback** - escritas de logs eficiente e estruturada
 
 ---
 
