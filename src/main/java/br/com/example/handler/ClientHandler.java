@@ -1,22 +1,20 @@
 package br.com.example.handler;
 
-import br.com.example.ChatServer;
+import br.com.example.model.Channel;
 import br.com.example.model.Client;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.Map;
 
 public class ClientHandler implements Runnable {
 
-    private static final Logger log = LoggerFactory.getLogger(ClientHandler.class);
-
     private final Client client;
-    private final ChatServer server;
+    private final Map<String, Channel> channels;
+    private final ExchangeHandler exchange;
 
-    public ClientHandler(Client client, ChatServer server) {
+    public ClientHandler(Client client, final Map<String, Channel> channels) {
         this.client = client;
-        this.server = server;
+        this.channels = channels;
+        this.exchange = new ExchangeHandler(client, null);
     }
 
     public void process() {
@@ -26,30 +24,49 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         String receiveMessage;
-        String id = this.client.getId();
         while (this.client.up()) {
-            try {
-                receiveMessage = this.client.receiveMessage();
-                if (receiveMessage.equals("/quit")) {
-                    this.server.closeClient(id);
-                    receiveMessage = "Saiu do chat!";
-                    this.broadcast(receiveMessage);
-                    break;
-                }
-                this.broadcast(receiveMessage);
-            } catch (IOException e) {
-                log.error("Fail in close socket connection!");
+            receiveMessage = this.client.getMessage().trim().strip();
+
+            if (receiveMessage.startsWith("/quit")) {
+                this.quitChannel();
+                break;
             }
+
+            if (receiveMessage.startsWith("/join")) {
+                this.joinChannel(receiveMessage);
+                continue;
+            }
+
+            if (receiveMessage.startsWith("/create-group")) {
+                this.createChannel(receiveMessage);
+                continue;
+            }
+
+            this.exchange.broadcast(receiveMessage);
         }
     }
 
-    private void broadcast(String message) {
-        log.info("Client {}, send '{}'",this.client.getId(),  message);
-        message = String.format("[%s]> %s", this.client.getId(), message);
-        for (Client clientConsumerMessage : this.server.getClientsConnected().values()) {
-            if (!clientConsumerMessage.getId().equals(this.client.getId())) {
-                clientConsumerMessage.write(message);
-            }
+    private void quitChannel() {
+        this.exchange.broadcast("Saiu do chat!");
+        this.exchange.disconnect();
+    }
+
+    private void joinChannel(String receiveMessage) {
+        String[] receive = receiveMessage.split(" ");
+        if(receive.length < 2) {
+            this.client.print("Canal não encontrado!");
+            return;
         }
+        this.exchange.switchChannel(this.channels.get(receive[1]));
+    }
+
+    private void createChannel(String receiveMessage) {
+        String channelName = receiveMessage.split(" ")[1];
+        if (this.channels.containsKey(channelName)) {
+            this.client.print("Canal já existe use /join " + channelName + " para se conectar nele");
+            return;
+        }
+        Channel newChannel = new Channel(channelName);
+        this.channels.put(channelName, newChannel);
     }
 }
