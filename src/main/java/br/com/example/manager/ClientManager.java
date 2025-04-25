@@ -15,6 +15,10 @@ public class ClientManager {
     }
 
     public void connected(Client client) {
+        if (this.alreadyExistClientConnectedWithName(client.getId())) {
+            client.print("Já existe um usuário conectado com esse nome!");
+            return;
+        }
         this.clientsConnected.put(client.getId(), client);
     }
 
