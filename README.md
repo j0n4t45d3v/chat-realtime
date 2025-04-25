@@ -25,6 +25,10 @@ Tudo isso acessado via **linha de comando (CLI)**.
 - Threads para controle simultâneo de clientes
 - Coleções sincronizadas para gerenciamento de estado
 - CLI para interação em tempo real
+- **Java 21+** - linguagem
+- **Java Sockets** (`java.net.ServerSocket`, `Socket`)
+- **Threads** - controle simultâneo de clientes
+- **ConcurrentMap** - Coleções sincronizadas
 
 ---
 
