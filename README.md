@@ -46,15 +46,20 @@ Tudo isso acessado via **linha de comando (CLI)**.
 ### ✅ Requisitos
 
 - Java 21+ instalado
+- Maven instalado
 
-### ▶️ Rodar o servidor
+### ▶️ Rodar o projeto
 
+
+- 🛠️ Gerar os JARs do servidor e do cliente:
 ```bash
-    javac Server.java
-    java Server
+    mvn clean package
 ```
-### 💬 Rodar um cliente
+- 🚀 Executar o servidor:
 ```bash
-    javac Client.java
-    java Client
+    java -jar target/chat-server.jar
+```
+- 💬 Executar o cliente:
+```bash
+    java -jar target/chat-client.jar
 ```
