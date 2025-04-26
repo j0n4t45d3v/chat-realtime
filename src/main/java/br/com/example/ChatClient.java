@@ -1,5 +1,6 @@
 package br.com.example;
 
+import br.com.example.enums.Command;
 import br.com.example.handler.ReceiveMessage;
 import br.com.example.utils.ReaderInput;
 
@@ -7,8 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ChatClient {
@@ -26,14 +28,17 @@ public class ChatClient {
 
             boolean isConnected = true;
             System.out.println("Escreva /help para ver os comandos que existem no chat!");
-            Map<String, Consumer<String>> options = getClientCommand(sendToServe);
+            Map<Command, Consumer<String>> options = getClientCommand(sendToServe);
             while (isConnected) {
                 String text = clientInputReader.readLine();
                 String command = text.split(" ")[0];
-                Consumer<String> commandExecute = options.getOrDefault(command, (String value) -> {
-                    System.out.printf("Comando %s não existe", value);
+                Optional<Command> commandParsed = Command.tryParse(command);
+                if (commandParsed.isEmpty()) {
+                    System.out.printf("Comando %s não existe", command);
                     showHelper();
-                });
+                    continue;
+                }
+                Consumer<String> commandExecute = options.get(commandParsed.get());
                 commandExecute.accept(text);
                 if (text.equals("/quit")) {
                     isConnected = false;
@@ -43,19 +48,22 @@ public class ChatClient {
         }
     }
 
-    private static Map<String, Consumer<String>> getClientCommand(OutputStream sendToServe) {
-        Map<String, Consumer<String>> options = new HashMap<>();
-        options.put("/clean", text -> cleanScreen());
-        options.put("/help", text -> showHelper());
-        options.put("/quit", text -> {
+    private static Map<Command, Consumer<String>> getClientCommand(OutputStream sendToServe) {
+        Map<Command, Consumer<String>> options = new EnumMap<>(Command.class);
+        options.put(Command.CLEAN_CHAT, text -> cleanScreen());
+        options.put(Command.HELP_COMMAND, text -> showHelper());
+        options.put(Command.QUIT, text -> {
             text = text.substring(1).trim() + '\n';
             sendMessage(sendToServe, text);
         });
-        options.put("/msg", text -> {
+        options.put(Command.SEND_MESSAGE, text -> {
             System.out.println(text);
             text = text.replace("/msg", "").trim() + '\n';
             sendMessage(sendToServe, text);
         });
+        options.put(Command.JOIN_CHANNEL, options.get(Command.QUIT));
+        options.put(Command.CREATE_CHANNEL, options.get(Command.QUIT));
+
         return options;
     }
 
