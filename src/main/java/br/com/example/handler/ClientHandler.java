@@ -24,9 +24,10 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         String receiveMessage;
+        boolean broadcastMessage;
         while (this.client.up()) {
             receiveMessage = this.client.getMessage().trim().strip();
-
+            broadcastMessage = true;
             if (receiveMessage.startsWith("/quit")) {
                 this.quitChannel();
                 break;
@@ -34,15 +35,15 @@ public class ClientHandler implements Runnable {
 
             if (receiveMessage.startsWith("/join")) {
                 this.joinChannel(receiveMessage);
-                continue;
-            }
-
-            if (receiveMessage.startsWith("/create-group")) {
+                broadcastMessage = false;
+            } else if (receiveMessage.startsWith("/create-group")) {
                 this.createChannel(receiveMessage);
-                continue;
+                broadcastMessage = false;
             }
 
-            this.exchange.broadcast(receiveMessage);
+            if(broadcastMessage) {
+                this.exchange.broadcast(receiveMessage);
+            }
         }
     }
 
