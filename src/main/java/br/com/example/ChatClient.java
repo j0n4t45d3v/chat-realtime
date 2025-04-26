@@ -53,12 +53,12 @@ public class ChatClient {
         options.put(Command.CLEAN_CHAT, text -> cleanScreen());
         options.put(Command.HELP_COMMAND, text -> showHelper());
         options.put(Command.QUIT, text -> {
-            text = text.substring(1).trim() + '\n';
+            text = text.trim() + '\n';
             sendMessage(sendToServe, text);
         });
         options.put(Command.SEND_MESSAGE, text -> {
-            System.out.println(text);
             text = text.replace("/msg", "").trim() + '\n';
+            System.out.println(text);
             sendMessage(sendToServe, text);
         });
         options.put(Command.JOIN_CHANNEL, options.get(Command.QUIT));
