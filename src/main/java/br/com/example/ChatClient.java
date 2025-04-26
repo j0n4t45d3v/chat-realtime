@@ -76,12 +76,7 @@ public class ChatClient {
         System.out.println();
         System.out.println("\toptions:");
         System.out.println();
-        System.out.println("\t/quit                 sai do chat.");
-        System.out.println("\t/clean                limpa o chat.");
-        System.out.println("\t/help                 mostra essa mensagem com os comandos.");
-        System.out.println("\t/join <canal>         mostra essa mensagem com os comandos.");
-        System.out.println("\t/create-group         mostra essa mensagem com os comandos.");
-        System.out.println("\t/msg [message]        use o prefixo '>' para poder enviar mensagens.");
+        Command.helpCommands();
         System.out.println();
     }
 
