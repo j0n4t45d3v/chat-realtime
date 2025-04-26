@@ -54,7 +54,7 @@ public class ClientHandler implements Runnable {
     private void joinChannel(String receiveMessage) {
         String[] receive = receiveMessage.split(" ");
         if(receive.length < 2) {
-            this.client.print("Canal não encontrado!");
+            this.client.print("Canal não informado!");
             return;
         }
         this.exchange.switchChannel(this.channels.get(receive[1]));
