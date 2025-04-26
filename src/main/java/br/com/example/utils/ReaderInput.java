@@ -40,7 +40,6 @@ public class ReaderInput {
             text.append((char) character);
             character = this.input.read();
         }
-        text.append('\n');
         return text.toString();
     }
 
@@ -51,7 +50,6 @@ public class ReaderInput {
             text.append((char) character);
             character = this.input.read();
         }
-        text.append('\n');
         return text.toString();
     }
 

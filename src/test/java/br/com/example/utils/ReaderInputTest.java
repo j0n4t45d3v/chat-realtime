@@ -38,7 +38,7 @@ class ReaderInputTest {
 
         String result = this.input.readLine();
 
-        assertEquals("lorem\n", result);
+        assertEquals("lorem", result);
     }
 
     @Test
@@ -56,7 +56,7 @@ class ReaderInputTest {
 
         String result = this.input.read();
 
-        assertEquals("input\n", result);
+        assertEquals("input", result);
     }
 
     @Test
