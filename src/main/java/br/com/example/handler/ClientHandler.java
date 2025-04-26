@@ -57,7 +57,12 @@ public class ClientHandler implements Runnable {
             this.client.print("Canal não informado!");
             return;
         }
-        this.exchange.switchChannel(this.channels.get(receive[1]));
+        Channel channelFound = this.channels.get(receive[1]);
+        if (channelFound == null) {
+            this.client.print("Canal não encontrado!");
+            return;
+        }
+        this.exchange.switchChannel(channelFound);
     }
 
     private void createChannel(String receiveMessage) {
