@@ -19,6 +19,11 @@ public class Channel {
         this.clientManager = new ClientManager();
     }
 
+    public Channel(String name, ClientManager clientManager) {
+        this.name = name;
+        this.clientManager = clientManager;
+    }
+
     public void broadcast(String clientSentId, String message) {
         log.info("Client {}, send '{}'", clientSentId, message);
         message = String.format("[%s]> %s", clientSentId, message);
